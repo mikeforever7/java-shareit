@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import ru.practicum.shareit.exception.MissingUserIdHeaderException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +34,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item addNewItem(Long userId, Item item) {
+        if (userId == null) {
+            throw new MissingUserIdHeaderException();
+        }
         if (!userRepository.isUserExist(userId)) {
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         }
@@ -43,6 +46,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto patchItem(Long userId, Long itemId, Item item) {
+        if (userId == null) {
+            throw new MissingUserIdHeaderException();
+        }
         if (!userRepository.isUserExist(userId)) {
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         }
@@ -66,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> searchAvailableItemByText(String text) {
         if (!StringUtils.hasText(text)) {
-            return new ArrayList<>();
+            return List.of();
         }
         String lowerCaseQuery = text.trim().toLowerCase();
         return itemRepository.searchAvailableItemByText(lowerCaseQuery);
