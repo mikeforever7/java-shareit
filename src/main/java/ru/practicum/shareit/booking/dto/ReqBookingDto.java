@@ -1,24 +1,26 @@
-package ru.practicum.shareit.user.dto;
+package ru.practicum.shareit.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class ReqBookingDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotNull
-    private String name;
+    private LocalDateTime start;
 
-    @Email
-    @NotBlank
-    private String email;
+    @NotNull
+    private LocalDateTime end;
+
+    @NotNull
+    private Long itemId;
 }
