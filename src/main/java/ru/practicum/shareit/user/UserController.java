@@ -30,13 +30,13 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User saveNewUser(@Valid @RequestBody User user) {
-        return userService.saveUser(user);
+    public User saveNewUser(@Valid @RequestBody UserDto userDto) {
+        return userService.saveUser(userDto);
     }
 
     @PatchMapping("/{id}")
-    public UserDto patchUser(@PathVariable long id, @RequestBody User user) {
-        return userService.patchUser(id, user);
+    public UserDto patchUser(@PathVariable long id, @RequestBody UserDto userDto) {
+        return userService.patchUser(id, userDto);
     }
 
     @DeleteMapping("/{id}")

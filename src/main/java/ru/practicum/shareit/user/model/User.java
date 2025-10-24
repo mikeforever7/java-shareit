@@ -1,23 +1,26 @@
 package ru.practicum.shareit.user.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+
+import lombok.*;
 
 /**
  * TODO Sprint add-controllers.
  */
-@Data
-@EqualsAndHashCode(of = {"id"})
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column
     private String name;
 
-    @Email
-    @NotBlank
+    @Column
     private String email;
+
 }
