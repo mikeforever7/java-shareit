@@ -33,8 +33,8 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMissingUserIdHeaderException(final MissingUserIdHeaderException e) {
-        return new ErrorResponse("Необходим заголовок X-Sharer-User-Id");
+    public ErrorResponse handleMissingUserIdHeaderException(final InvalidUserRequestException e) {
+        return new ErrorResponse("Пользователь не авторизован");
     }
 
     @ExceptionHandler

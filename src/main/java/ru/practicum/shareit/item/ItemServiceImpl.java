@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.exception.MissingUserIdHeaderException;
+import ru.practicum.shareit.exception.InvalidUserRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -57,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDto addNewItem(Long userId, ItemDto itemDto) {
         if (userId == null) {
-            throw new MissingUserIdHeaderException();
+            throw new InvalidUserRequestException();
         }
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public CommentDto addNewComment(Long userId, Long itemId, CommentDto commentDto) {
         if (userId == null) {
-            throw new MissingUserIdHeaderException();
+            throw new InvalidUserRequestException();
         }
         Booking booking = bookingRepository.findByBookerIdAndItemId(userId, itemId)
                 .orElseThrow(() -> new ValidationException("Пользователь id=" + userId + "не бронировал вещь id=" + itemId));
@@ -88,7 +88,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDto patchItem(Long userId, Long itemId, ItemDto itemDto) {
         if (userId == null) {
-            throw new MissingUserIdHeaderException();
+            throw new InvalidUserRequestException();
         }
         Item itemForPatch = itemRepository.findByIdAndOwnerId(itemId, userId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id=" + itemId + " не найдена"));

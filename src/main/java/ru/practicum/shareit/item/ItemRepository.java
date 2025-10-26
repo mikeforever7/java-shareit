@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findItemsByOwnerId(long userId);
 
-    @Query("select i from Item i left join fetch i.comments where i.id = ?1")
+    @Query("select i from Item i left join fetch i.comments where i.id = :itemId")
     Optional<Item> findByIdWithComments(Long itemId);
 
     Optional<Item> findItemById(long itemId);
