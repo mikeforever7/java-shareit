@@ -33,8 +33,8 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMissingUserIdHeaderException(final MissingUserIdHeaderException e) {
-        return new ErrorResponse("Необходим заголовок X-Sharer-User-Id");
+    public ErrorResponse handleMissingUserIdHeaderException(final InvalidUserRequestException e) {
+        return new ErrorResponse("Пользователь не авторизован");
     }
 
     @ExceptionHandler
@@ -51,6 +51,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleHttpMessageNotReadable(final HttpMessageNotReadableException e) {
         return new ErrorResponse("Некорректный формат данных. Проверьте, что все числовые поля содержат числа.");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(final ForbiddenException e) {
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
