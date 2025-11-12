@@ -32,7 +32,7 @@ public class ItemClient extends BaseClient {
         return get("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> getItems(long userId){
+    public ResponseEntity<Object> getItems(long userId) {
         return get("", userId);
     }
 
@@ -40,7 +40,7 @@ public class ItemClient extends BaseClient {
         return post("", userId, itemDto);
     }
 
-    public ResponseEntity<Object> patchItem(long userId,long itemId, ItemUpdateReqDto itemUpdateReqDto) {
+    public ResponseEntity<Object> patchItem(long userId, long itemId, ItemUpdateReqDto itemUpdateReqDto) {
         return patch("/" + itemId, userId, itemUpdateReqDto);
     }
 

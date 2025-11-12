@@ -123,16 +123,14 @@ public class BookingServiceImpl implements BookingService {
         }
 
         List<Booking> bookings;
-        // Это не должно произойти, если валидация в контроллере корректна
+
         switch (state) {
             case ALL -> bookings = bookingRepository.findByItemOwnerIdOrderByStartDesc(ownerId);
             case CURRENT ->
                     bookings = bookingRepository.findByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId,
                             LocalDateTime.now(), LocalDateTime.now());
-            case PAST ->
-                    bookings = bookingRepository.findByItemOwnerIdAndEndBefore(ownerId, LocalDateTime.now());
-            case FUTURE ->
-                    bookings = bookingRepository.findByItemOwnerIdAndStartAfter(ownerId, LocalDateTime.now());
+            case PAST -> bookings = bookingRepository.findByItemOwnerIdAndEndBefore(ownerId, LocalDateTime.now());
+            case FUTURE -> bookings = bookingRepository.findByItemOwnerIdAndStartAfter(ownerId, LocalDateTime.now());
             case WAITING ->
                 // Получить ожидающие бронирования для вещей владельца
                     bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingState.WAITING);
@@ -140,7 +138,8 @@ public class BookingServiceImpl implements BookingService {
                 // Получить отклонённые бронирования для вещей владельца
                     bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingState.REJECTED);
             default -> throw new IllegalArgumentException("Неизвестный state=" + state);
-        } ;
+        }
+        ;
         return BookingMapper.mapToBookingList(bookings);
     }
 }

@@ -35,8 +35,7 @@ public class BookingController {
 
     @GetMapping(path = "/owner")
     public ResponseEntity<Object> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") long userId,
-                                              @RequestParam(name = "state", defaultValue = "all") String stateParam)
-                                              {
+                                                   @RequestParam(name = "state", defaultValue = "all") String stateParam) {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("Get booking with state {}, userId={}", stateParam, userId);
@@ -52,14 +51,14 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                            @Positive @PathVariable Long bookingId) {
+                                             @Positive @PathVariable Long bookingId) {
         log.info("Get booking {}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
     }
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> patchBooking(@RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId,
-                                       @PathVariable Long bookingId, @RequestParam Boolean approved) {
+                                               @PathVariable Long bookingId, @RequestParam Boolean approved) {
         return bookingClient.patchBooking(userId, bookingId, approved);
     }
 

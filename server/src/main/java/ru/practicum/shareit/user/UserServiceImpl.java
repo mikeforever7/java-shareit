@@ -33,10 +33,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User saveUser(UserDto userDto) {
         if (repository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException("Пользователь с Email " + userDto.getEmail() + " существует");
         }
+        log.info("сохраняем юзера {}", userDto);
         return repository.save(UserMapper.mapToUser(userDto));
     }
 

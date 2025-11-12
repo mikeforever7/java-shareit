@@ -34,8 +34,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId,
-                           @Valid @RequestBody ItemDto itemDto) {
-        System.out.println("Добрались сюда");
+                           @RequestBody ItemDto itemDto) {
         return itemService.addNewItem(userId, itemDto);
     }
 

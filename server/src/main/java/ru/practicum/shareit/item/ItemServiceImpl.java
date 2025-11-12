@@ -16,6 +16,8 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemWithCommentsDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequestRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -31,6 +33,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public List<ItemDto> getItems(Long userId) {
@@ -43,6 +46,7 @@ public class ItemServiceImpl implements ItemService {
 
         Item item = itemRepository.findByIdWithComments(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id =" + itemId + " не найдена"));
+
         if (!item.getOwner().getId().equals(userId)) {
             return ItemMapper.mapToItemWithCommentsDto(item, null, null);
         }
@@ -50,6 +54,7 @@ public class ItemServiceImpl implements ItemService {
         Booking lastBooking = lastBookingOpt.orElse(null);
         Optional<Booking> nextBookingOpt = bookingRepository.findFirstByItemIdAndStartAfterOrderByStartAsc(itemId, LocalDateTime.now());
         Booking nextBooking = nextBookingOpt.orElse(null);
+
         return ItemMapper.mapToItemWithCommentsDto(item, lastBooking, nextBooking);
     }
 
@@ -61,8 +66,16 @@ public class ItemServiceImpl implements ItemService {
         }
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
-        Item item = itemRepository.save(ItemMapper.mapToItem(itemDto, owner));
-        return ItemMapper.mapToItemDto(item);
+
+        Item item = ItemMapper.mapToItem(itemDto, owner);
+        Long requestId = itemDto.getRequestId();
+        if (requestId != null) {
+            ItemRequest itemRequest = itemRequestRepository.findById(requestId)
+                    .orElseThrow(() -> new NotFoundException("ItemRequest с id = " + requestId + " не найден"));
+            item.setRequest(itemRequest);
+        }
+        Item savedItem = itemRepository.save(item);
+        return ItemMapper.mapToItemDto(savedItem);
     }
 
     @Override
@@ -73,14 +86,18 @@ public class ItemServiceImpl implements ItemService {
         }
         Booking booking = bookingRepository.findByBookerIdAndItemId(userId, itemId)
                 .orElseThrow(() -> new ValidationException("Пользователь id=" + userId + "не бронировал вещь id=" + itemId));
+
         if (booking.getEnd().isAfter(LocalDateTime.now())) {
             throw new ValidationException("Отзыв можно оставить только после завершения бронирования");
         }
+
         Item proxyItem = itemRepository.getReferenceById(itemId);
+
         User author = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Автор не найден"));
         Comment comment = ItemMapper.mapToComment(commentDto, proxyItem, author);
         Comment newComment = commentRepository.save(comment);
+
         return ItemMapper.mapToCommentDto(newComment, author);
     }
 

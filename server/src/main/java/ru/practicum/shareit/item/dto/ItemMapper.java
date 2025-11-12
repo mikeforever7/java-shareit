@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.model.Booking;
@@ -11,12 +12,25 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
-
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemMapper {
 
     public static ItemDto mapToItemDto(Item item) {
-        return new ItemDto(item.getId(), item.getOwner().getId(), item.getName(), item.getDescription(), item.getAvailable());
+        ItemDto itemDto = new ItemDto();
+        itemDto.setId(item.getId());
+        itemDto.setOwnerId(item.getOwner().getId());
+        itemDto.setName(item.getName());
+        itemDto.setDescription(item.getDescription());
+        itemDto.setAvailable(item.getAvailable());
+        if (item.getRequest() != null) {
+            itemDto.setRequestId(item.getRequest().getId());
+        }
+        return itemDto;
+    }
+
+    public static ItemForItemRequestDto mapToItemForRequestDto(Item item) {
+        return new ItemForItemRequestDto(item.getId(), item.getOwner().getId(), item.getName());
     }
 
     public static ItemWithCommentsDto mapToItemWithCommentsDto(Item item, Booking lastBooking, Booking nextBooking) {
@@ -36,11 +50,16 @@ public final class ItemMapper {
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
+
         return item;
     }
 
     public static List<ItemDto> mapToItemDtoList(List<Item> items) {
         return items.stream().map(ItemMapper::mapToItemDto).toList();
+    }
+
+    public static List<ItemForItemRequestDto> mapToItemForRequestDtoList(List<Item> items) {
+        return items.stream().map(ItemMapper::mapToItemForRequestDto).toList();
     }
 
     public static Comment mapToComment(CommentDto commentDto, Item item, User user) {

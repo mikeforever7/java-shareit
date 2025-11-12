@@ -15,10 +15,8 @@ public class ReqBookingDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @NotNull
     private LocalDateTime start;
 
-    @NotNull
     private LocalDateTime end;
 
     @NotNull

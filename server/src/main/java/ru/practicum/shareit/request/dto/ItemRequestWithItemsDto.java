@@ -1,29 +1,30 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.request.dto;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import ru.practicum.shareit.item.dto.ItemForItemRequestDto;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemDto {
+public class ItemRequestWithItemsDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
-
-    private Long ownerId;
-
-    @NotBlank
-    private String name;
 
     @NotBlank
     private String description;
 
-    @NotNull(message = "Поле available обязательно")
-    private Boolean available;
+    private Long requesterId;
 
-    private Long requestId;
+    private LocalDateTime created;
+
+    private List<ItemForItemRequestDto> items;
+
 }
