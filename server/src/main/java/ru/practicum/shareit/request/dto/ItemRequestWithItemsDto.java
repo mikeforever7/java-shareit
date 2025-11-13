@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import ru.practicum.shareit.item.dto.ItemForItemRequestDto;
 
@@ -18,7 +17,6 @@ public class ItemRequestWithItemsDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @NotBlank
     private String description;
 
     private Long requesterId;

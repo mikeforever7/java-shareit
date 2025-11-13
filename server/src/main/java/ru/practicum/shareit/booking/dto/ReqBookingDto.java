@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,6 +18,5 @@ public class ReqBookingDto {
 
     private LocalDateTime end;
 
-    @NotNull
     private Long itemId;
 }
